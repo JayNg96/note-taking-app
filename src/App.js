@@ -33,7 +33,7 @@ export default function App() {
             let newArray = []
             for(let i = 0; i < oldNotes.length; i++){
                 console.log(oldNotes[i])
-                if(oldNotes[i].id == currentNoteId){
+                if(oldNotes[i].id === currentNoteId){
                     newArray.unshift({...oldNotes[i], body: text})
                 }
                 else {
@@ -42,14 +42,6 @@ export default function App() {
             }
             return newArray
         })
-
-        // setNotes(oldNotes => oldNotes.map(oldNote => {
-        //     return oldNote.id === currentNoteId
-        //         ? { ...oldNote, body: text }
-        //         : oldNote
-        // }))
-        
-        // const itemToFind = notes.
     }
     
     function findCurrentNote() {
@@ -57,6 +49,11 @@ export default function App() {
             return note.id === currentNoteId
         }) || notes[0]
         
+    }
+
+    function deleteNote(event, noteId){
+        event.stopPropagation()
+        setNotes(prevNotes => prevNotes.filter(prevNote => prevNote.id !== noteId))
     }
     
     return (
@@ -74,6 +71,7 @@ export default function App() {
                     currentNote={findCurrentNote()}
                     setCurrentNoteId={setCurrentNoteId}
                     newNote={createNewNote}
+                    deleteNote={deleteNote}
                 />
                 {
                     currentNoteId && 
