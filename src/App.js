@@ -7,22 +7,17 @@ import {nanoid} from "nanoid"
 import './style.css'
 
 export default function App() {
-    /**
-     * Challenge:
-     * 1. Every time the `notes` array changes, save it 
-     *    in localStorage. You'll need to use JSON.stringify()
-     *    to turn the array into a string to save in localStorage.
-     * 2. When the app first loads, initialize the notes state
-     *    with the notes saved in localStorage. You'll need to
-     *    use JSON.parse() to turn the stringified array back
-     *    into a real JS array.
-     */
-    
-    const [notes, setNotes] = React.useState([])
+
+    const [notes, setNotes] = React.useState(() => JSON.parse(localStorage.getItem("notes")) || [])
+
+    React.useEffect(()=>{
+        localStorage.setItem("notes", JSON.stringify(notes))
+    }, [notes])
+
     const [currentNoteId, setCurrentNoteId] = React.useState(
         (notes[0] && notes[0].id) || ""
     )
-    
+
     function createNewNote() {
         const newNote = {
             id: nanoid(),
@@ -33,17 +28,35 @@ export default function App() {
     }
     
     function updateNote(text) {
-        setNotes(oldNotes => oldNotes.map(oldNote => {
-            return oldNote.id === currentNoteId
-                ? { ...oldNote, body: text }
-                : oldNote
-        }))
+
+        setNotes(oldNotes => {
+            let newArray = []
+            for(let i = 0; i < oldNotes.length; i++){
+                console.log(oldNotes[i])
+                if(oldNotes[i].id == currentNoteId){
+                    newArray.unshift({...oldNotes[i], body: text})
+                }
+                else {
+                    newArray.push(oldNotes[i])
+                }
+            }
+            return newArray
+        })
+
+        // setNotes(oldNotes => oldNotes.map(oldNote => {
+        //     return oldNote.id === currentNoteId
+        //         ? { ...oldNote, body: text }
+        //         : oldNote
+        // }))
+        
+        // const itemToFind = notes.
     }
     
     function findCurrentNote() {
         return notes.find(note => {
             return note.id === currentNoteId
         }) || notes[0]
+        
     }
     
     return (
