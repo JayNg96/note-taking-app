@@ -21,5 +21,8 @@ module.exports = {
   },
   "entry": {
     "index": "./index"
+  },
+  "resolve": {
+    "extensions": ['.js', '.jsx']
   }
 };
